@@ -6,4 +6,8 @@ c:\users\asantiago.transnetwork\documents\visual studio 2012\Projects\HelpdeskTo
 c:\users\asantiago.transnetwork\documents\visual studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.exe
 c:\users\asantiago.transnetwork\documents\visual studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.pdb
 c:\users\asantiago.transnetwork\documents\visual studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.Form1.resources
+C:\Users\asantiago.TRANSNETWORK\Documents\Visual Studio 2012\Projects\HelpdeskTool\HelpdeskTool\bin\Debug\HelpdeskTool.exe.manifest
+C:\Users\asantiago.TRANSNETWORK\Documents\Visual Studio 2012\Projects\HelpdeskTool\HelpdeskTool\bin\Debug\HelpdeskTool.application
+C:\Users\asantiago.TRANSNETWORK\Documents\Visual Studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.exe.manifest
+C:\Users\asantiago.TRANSNETWORK\Documents\Visual Studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.application
 C:\Users\asantiago.TRANSNETWORK\Documents\Visual Studio 2012\Projects\HelpdeskTool\HelpdeskTool\obj\Debug\HelpdeskTool.csprojResolveAssemblyReference.cache

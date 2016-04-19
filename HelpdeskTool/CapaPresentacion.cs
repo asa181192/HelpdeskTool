@@ -8,6 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/*@Author Alfredo Santiago Alvarado 
+ * Fecha : 14/04/2016
+ * Actualizaciones 
+ * 19/04/2016
+ * -Agregada Apartado de validacion de remesa para saber estatus-
+ */
+
 namespace HelpdeskTool
 {
     public partial class Form1 : Form
@@ -16,6 +23,7 @@ namespace HelpdeskTool
         private String remesa;
         private String mensaje;
         private AccesoDatos data;
+        DataTable table;
         public Form1()
         {
            
@@ -24,13 +32,15 @@ namespace HelpdeskTool
             operacion.Items.Add("Cancelacion");
             operacion.Items.Add("Rechazo");
             operacion.Items.Add("Pago");
+            
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+             table = new DataTable();
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            data = new AccesoDatos();
+             data = new AccesoDatos();
         }
 
         private void button1_Click(object sender, EventArgs e) // validaciones al momento de presentarte en la interfaz 
@@ -47,7 +57,7 @@ namespace HelpdeskTool
                 if (value.Equals("Reverso"))
                 {
                     
-                                   
+                           
                     infoMessg = data.reversa(remesa, mensaje);
                     info.Text = infoMessg;
 
@@ -69,9 +79,14 @@ namespace HelpdeskTool
                 {
                  operacion.SelectedIndex = -1;
                 }
-                
-                claimNumber.Clear();
-            
+
+                if (checkBoxClaimNumber.Checked == false)
+                {
+                    gridVista.DataSource = null;
+                    gridVista.Rows.Clear();
+                     claimNumber.Clear();
+                }
+                  
                
             }
             else
@@ -91,7 +106,7 @@ namespace HelpdeskTool
             value = operacion.SelectedItem.ToString();
             }
             
-            switch (value) 
+            switch (value)      
             {
                 case "Cancelacion": message.Text = "Cancel Manually by ";
                     break;
@@ -100,15 +115,29 @@ namespace HelpdeskTool
                 case "Pago": message.Text = "Complete Manually by";
                     break;
                 case "Reverso": message.Text = "Reverse Manually by ";
-                    break; 
-                
-
+                    break;
+                  
             }
 
-         
+        }
 
-            
-            
+        private void verificar_Click(object sender, EventArgs e)
+        {
+            if (claimNumber.Text.ToString() != "")
+            {
+                remesa = claimNumber.Text.ToString().Trim();
+                table = data.validar(remesa);
+                gridVista.DataSource = table;
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
 
