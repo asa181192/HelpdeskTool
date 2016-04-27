@@ -1,6 +1,6 @@
 ﻿namespace HelpdeskTool
 {
-    partial class Form1
+    partial class Eraser
     {
         /// <summary>
         /// Required designer variable.
@@ -28,27 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Eraser));
             this.button1 = new System.Windows.Forms.Button();
             this.operacion = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.operacionLabel = new System.Windows.Forms.Label();
+            this.ClaimNumberLabel = new System.Windows.Forms.Label();
             this.claimNumber = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.MensajeLabel = new System.Windows.Forms.Label();
             this.message = new System.Windows.Forms.TextBox();
             this.info = new System.Windows.Forms.TextBox();
             this.ChekBoxMensaje = new System.Windows.Forms.CheckBox();
             this.checkBoxOoperacion = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.gridVista = new System.Windows.Forms.DataGridView();
-            this.status = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.checkBoxClaimNumber = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.verificar = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.loadingGif = new System.Windows.Forms.PictureBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.gridVista)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingGif)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -77,25 +81,26 @@
             this.operacion.TabIndex = 3;
             this.operacion.SelectedIndexChanged += new System.EventHandler(this.operacion_SelectedIndexChanged);
             // 
-            // label2
+            // operacionLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(51, 128);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 16);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Operacion";
+            this.operacionLabel.AutoSize = true;
+            this.operacionLabel.Location = new System.Drawing.Point(51, 128);
+            this.operacionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.operacionLabel.Name = "operacionLabel";
+            this.operacionLabel.Size = new System.Drawing.Size(74, 16);
+            this.operacionLabel.TabIndex = 4;
+            this.operacionLabel.Text = "Operacion";
             // 
-            // label3
+            // ClaimNumberLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(47, 174);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 16);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "ClaimNumber";
+            this.ClaimNumberLabel.AutoSize = true;
+            this.ClaimNumberLabel.Location = new System.Drawing.Point(51, 173);
+            this.ClaimNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ClaimNumberLabel.Name = "ClaimNumberLabel";
+            this.ClaimNumberLabel.Size = new System.Drawing.Size(91, 16);
+            this.ClaimNumberLabel.TabIndex = 5;
+            this.ClaimNumberLabel.Text = "ClaimNumber";
+            this.ClaimNumberLabel.Click += new System.EventHandler(this.label3_Click);
             // 
             // claimNumber
             // 
@@ -106,15 +111,15 @@
             this.claimNumber.Size = new System.Drawing.Size(160, 23);
             this.claimNumber.TabIndex = 6;
             // 
-            // label4
+            // MensajeLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(51, 282);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 16);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Mensaje";
+            this.MensajeLabel.AutoSize = true;
+            this.MensajeLabel.Location = new System.Drawing.Point(51, 282);
+            this.MensajeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MensajeLabel.Name = "MensajeLabel";
+            this.MensajeLabel.Size = new System.Drawing.Size(62, 16);
+            this.MensajeLabel.TabIndex = 7;
+            this.MensajeLabel.Text = "Mensaje";
             // 
             // message
             // 
@@ -136,6 +141,7 @@
             this.info.Multiline = true;
             this.info.Name = "info";
             this.info.ReadOnly = true;
+            this.info.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.info.Size = new System.Drawing.Size(340, 59);
             this.info.TabIndex = 9;
             // 
@@ -166,7 +172,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(94, 16);
             this.label1.TabIndex = 13;
-            this.label1.Text = "version 1.0.3";
+            this.label1.Text = "version 1.1.3";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // gridVista
@@ -182,18 +188,18 @@
             this.gridVista.Location = new System.Drawing.Point(155, 197);
             this.gridVista.Name = "gridVista";
             this.gridVista.ReadOnly = true;
-            this.gridVista.Size = new System.Drawing.Size(436, 48);
+            this.gridVista.Size = new System.Drawing.Size(494, 48);
             this.gridVista.TabIndex = 15;
             this.gridVista.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
-            // status
+            // statusLabel
             // 
-            this.status.AutoSize = true;
-            this.status.Location = new System.Drawing.Point(51, 215);
-            this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(58, 16);
-            this.status.TabIndex = 16;
-            this.status.Text = "Estatus";
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Location = new System.Drawing.Point(51, 215);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(58, 16);
+            this.statusLabel.TabIndex = 16;
+            this.statusLabel.Text = "Estatus";
             // 
             // checkBoxClaimNumber
             // 
@@ -209,7 +215,7 @@
             // 
             this.pictureBox3.ErrorImage = null;
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(149, 347);
+            this.pictureBox3.Location = new System.Drawing.Point(541, 347);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(38, 38);
             this.pictureBox3.TabIndex = 18;
@@ -219,7 +225,7 @@
             // 
             this.verificar.BackColor = System.Drawing.Color.White;
             this.verificar.Image = ((System.Drawing.Image)(resources.GetObject("verificar.Image")));
-            this.verificar.Location = new System.Drawing.Point(598, 207);
+            this.verificar.Location = new System.Drawing.Point(655, 207);
             this.verificar.Name = "verificar";
             this.verificar.Size = new System.Drawing.Size(38, 24);
             this.verificar.TabIndex = 14;
@@ -236,15 +242,43 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
-            // Form1
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.Window;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.Location = new System.Drawing.Point(54, 344);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(45, 41);
+            this.button2.TabIndex = 19;
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // loadingGif
+            // 
+            this.loadingGif.Image = ((System.Drawing.Image)(resources.GetObject("loadingGif.Image")));
+            this.loadingGif.Location = new System.Drawing.Point(312, 173);
+            this.loadingGif.Name = "loadingGif";
+            this.loadingGif.Size = new System.Drawing.Size(101, 101);
+            this.loadingGif.TabIndex = 20;
+            this.loadingGif.TabStop = false;
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            // 
+            // Eraser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(705, 455);
+            this.Controls.Add(this.loadingGif);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.checkBoxClaimNumber);
-            this.Controls.Add(this.status);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.gridVista);
             this.Controls.Add(this.verificar);
             this.Controls.Add(this.label1);
@@ -253,10 +287,10 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.info);
             this.Controls.Add(this.message);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.MensajeLabel);
             this.Controls.Add(this.claimNumber);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.ClaimNumberLabel);
+            this.Controls.Add(this.operacionLabel);
             this.Controls.Add(this.operacion);
             this.Controls.Add(this.button1);
             this.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -264,12 +298,13 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "Eraser";
             this.Text = "Transnetwork Tool";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridVista)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingGif)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,10 +314,10 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox operacion;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label operacionLabel;
+        private System.Windows.Forms.Label ClaimNumberLabel;
         private System.Windows.Forms.TextBox claimNumber;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label MensajeLabel;
         private System.Windows.Forms.TextBox message;
         private System.Windows.Forms.TextBox info;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -290,10 +325,13 @@
         private System.Windows.Forms.CheckBox checkBoxOoperacion;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView gridVista;
-        private System.Windows.Forms.Label status;
+        private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.CheckBox checkBoxClaimNumber;
         private System.Windows.Forms.Button verificar;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PictureBox loadingGif;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

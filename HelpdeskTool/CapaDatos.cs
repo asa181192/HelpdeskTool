@@ -7,6 +7,10 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 
+/*
+ * Esta Clase es la encargada de la connescion con la base de datos , realiza operaciones mediante Store Procedures .
+ * 
+ */
 namespace HelpdeskTool
 {
     class CapaDatos
@@ -14,27 +18,68 @@ namespace HelpdeskTool
 
         private String connection;
         private SqlConnection conn;
-        private DataTable table ; 
+        private DataTable table;
+        private String claimnumber;
+        private String note;
+        private String operacion;
+        private String message;
+       
+
+       
+
+        public DataTable Table
+        {
+            get { return table; }
+            set { table = value; }
+        }
+        
+
+        public String Claimnumber
+        {
+            get { return claimnumber; }
+            set { claimnumber = value; }
+        }
+     
+
+        public String Note
+        {
+            get { return note; }
+            set { note = value; }
+        }
+        
+
+        public String Operacion
+        {
+            get { return operacion; }
+            set { operacion = value; }
+        }
+      
+
+        public String Message
+        {
+            get { return message; }
+            set { message = value; }
+        }
 
         public CapaDatos()
         {
             connection =  System.Configuration.ConfigurationManager.ConnectionStrings["DBconnect"].ConnectionString;
             conn = new SqlConnection();
             conn.ConnectionString = connection;
-            
+            table = new DataTable();
            
         }
 
-        public string STreversa(string claimNumber, string note)
+        public void STreversa()
         {
-            string message = null;
+           
             SqlParameter param1, param2, param3, param4, param5;
             SqlCommand cmd = new SqlCommand("dbo.ST_REVERSE_PAYMENT",conn); 
             cmd.CommandType = CommandType.StoredProcedure;
 
             #region parametros
 
-            param1 = new SqlParameter("@v_claim_number",claimNumber); 
+            param1 = new SqlParameter("@v_claim_number", claimnumber.ToString()); 
             param1.Direction = ParameterDirection.Input;
             param1.SqlDbType = SqlDbType.VarChar;
             param1.Size = 32;
@@ -44,7 +89,7 @@ namespace HelpdeskTool
             param2.SqlDbType = SqlDbType.VarChar;
             param2.Size = 250;
 
-            param3 = new SqlParameter("@v_note", note);
+            param3 = new SqlParameter("@v_note", note.ToString());
             param3.Direction = ParameterDirection.Input;
             param3.SqlDbType = SqlDbType.VarChar;
             param3.Size = 250;
@@ -71,11 +116,11 @@ namespace HelpdeskTool
                 cmd.ExecuteNonQuery(); // EJECUTAS EL QUERY 
                 message =  String.Concat(String.Concat(cmd.Parameters["@v_return_code"].Value.ToString(), " "), cmd.Parameters["@v_return_str"].Value.ToString());
               
-                return message;
+              
             }
             catch (SqlException ex)
             {
-                return  ex.ToString(); 
+                message = ex.ToString();
             }
 
             finally
@@ -88,26 +133,28 @@ namespace HelpdeskTool
            
         }
 
-        public string STanulacionRechazo(string claimNumber, string note ,string operacion)
+        public void STanulacionRechazo()
         {          
            
 
-           String message = null ,transType=null,status=null;
+           String transType=null,status=null;
            SqlParameter param1, param2, param3, param4, param5,param6,param7,param8,param9,param10,param11,param12,param13;
            SqlCommand cmd = new SqlCommand("dbo.ST_UPDATE_FROM_PAYER_FOR_MQ",conn);
            cmd.CommandType = CommandType.StoredProcedure;
 
 
 
-            if (operacion.Equals("Cancelacion")) {
+           if (operacion.Equals("Cancelacion (Cash)"))
+           {
                 transType = "CANCEL";
                 status = "COMPLETE";
                         }
-            else if (operacion.Equals("Rechazo")) {
+           else if (operacion.Equals("Rechazo (Deposit)"))
+           {
                 transType = "TRANSFER";
                 status = "REJECTED";
             }
-            else if (operacion.Equals("Pago"))
+           else if (operacion.Equals("Reverso (Disponible)"))
             {
                 transType = "TRANSFER";
                 status = "COMPLETE";
@@ -118,9 +165,9 @@ namespace HelpdeskTool
             param1 = new SqlParameter("@v_transfer_id", DBNull.Value);
             param1.Direction = ParameterDirection.Input;
             param1.SqlDbType = SqlDbType.BigInt;
-          
 
-            param2 = new SqlParameter("@v_claim_number", claimNumber);
+
+            param2 = new SqlParameter("@v_claim_number", claimnumber);
             param2.Direction = ParameterDirection.Input;
             param2.SqlDbType = SqlDbType.NVarChar;
             param2.Size = 30;
@@ -196,13 +243,13 @@ namespace HelpdeskTool
             {
                 conn.Open() ;
                 cmd.ExecuteNonQuery();
-               message = String.Concat(String.Concat(cmd.Parameters["@v_return_code"].Value.ToString(), " "), cmd.Parameters["@v_return_str"].Value.ToString());
+                message = String.Concat(String.Concat(cmd.Parameters["@v_return_code"].Value.ToString(), " "), cmd.Parameters["@v_return_str"].Value.ToString());
                 conn.Close();
-                return message;
+                
             }
             catch(SqlException ex) {
 
-                return ex.ToString();
+                message = ex.ToString();
             }
             finally {
                 conn.Close();
@@ -211,26 +258,40 @@ namespace HelpdeskTool
             
         }
 
-        public DataTable ValidarRemesa(string claimnumber)
+        public void ValidarRemesa()
         {
 
-
-            String query =  "if ( (select count(transferid) from production.Transfer where ClaimNumber = @claimNumber )>0) "
-                            +"Select ts.TransferStatusName,Case t.PaymentTypeId "
+            table = new DataTable();
+        
+            String query = "if ( (select count(transferid) from production.Transfer where (ClaimNumber = @claimNumber) or (transferid = @transferid) )>0) "
+                            +"Select t.ClaimNumber,ts.TransferStatusName,Case t.PaymentTypeId "
                             +"when 1 " 
                             +"then 'Cash' "
                             +"when 2 "
                             +"then 'Deposit' "
                             +"end as 'PaymentTypeId'  from production.Transfer t (nolock) " 
                             +"join Production.TransferStatus ts(nolock) " 
-                            +"on t.TransferStatusId = ts.TransferStatusId "  
-                            +"where t.ClaimNumber = @claimNumber "
+                            +"on t.TransferStatusId = ts.TransferStatusId "
+                            + "where (t.ClaimNumber = @claimNumber) or (t.transferid = @transferid) "
                             +"else "
-                            + "select 'No existe informacion' as TransferStatusName , 'No existe Informacion' as PaymentTypeId"; 
+                            + "select  'No existe informacion' as ClaimNumber,'No existe informacion' as TransferStatusName , 'No existe Informacion' as PaymentTypeId"; 
             SqlCommand cmd = new SqlCommand(query,conn);
-            cmd.Parameters.AddWithValue("@claimNumber",claimnumber.ToString());
-            table = new DataTable();
-            table.Columns.Add("TransferStatusName",typeof(string));
+
+          
+            if (claimnumber.All(char.IsDigit)) // valida si es claim number o transfer ID 
+            {
+                cmd.Parameters.AddWithValue("@claimNumber",claimnumber.ToString());
+                cmd.Parameters.AddWithValue("@transferid", claimnumber.ToString());
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@claimNumber", claimnumber.ToString());
+                cmd.Parameters.AddWithValue("@transferid", -1);
+            }
+
+           
+            table.Columns.Add("ClaimNumber", typeof(string));
+            table.Columns.Add("TransferStatusName", typeof(string));
             table.Columns.Add("PaymentTypeId", typeof(string));
 
             try
@@ -242,27 +303,29 @@ namespace HelpdeskTool
                 {
                                    
                     lector.Read();
-                    if (lector["TransferStatusName"] != DBNull.Value)
-                    {
-                        table.Rows.Add(lector["TransferStatusName"].ToString(), lector["PaymentTypeId"].ToString());
+                 //    table.Rows.Add(lector["ClaimNumber"].ToString(), lector["TransferStatusName"].ToString(), lector["PaymentTypeId"].ToString());
+                        if (lector["TransferStatusName"] != DBNull.Value)
+                           {
+                               table.Rows.Add(lector["ClaimNumber"].ToString(), lector["TransferStatusName"].ToString(), lector["PaymentTypeId"].ToString());
 
-                        return table;
-                    }
-                    else
-                    {
-                        table.Rows.Add(lector["TransferStatusName"].ToString(), lector["PaymentTypeId"].ToString());
+                               
+                           }
+                           else
+                           {
+                               table.Rows.Add(lector["ClaimNumber"].ToString(), lector["TransferStatusName"].ToString(), lector["PaymentTypeId"].ToString());
 
-                        return table;
-                    }
-                   
 
+                           
+                           }
+        
                 }
 
             }
             catch(SqlException ex ) 
             {
-                table.Rows.Add("null", "null");
-                return null;
+                table.Rows.Add("SqlServer Exception", "SqlServer Exception", "SqlServer Exception");
+                message = ex.ToString();
+                
             }
             finally
             {
